@@ -36,22 +36,28 @@ namespace Aplicacion.Repository
      }
 
 
-     public async Task<List<string>>  ListarProveedoresPorMedicamentoDeterminado_Consulta4(string NombreMedicamento)
+     public async Task<List<String>>  ListarProveedoresPorMedicamentoDeterminado_Consulta4(string NombreMedicamento)
      {       
-            List<String> Proveedores = new List<String>();
+           List<string> Proveedores = new List<string>();
+           
             var MedicamentoBuscado =await  _context.Medicamentos.FirstOrDefaultAsync( x => x.NombreMedicamento.ToLower() == NombreMedicamento.ToLower());
 
 
-           var MedicamentoProveedor=  _context.MedicamentosProveedores.Where(x => x.MedicamentoId == MedicamentoBuscado.Id).Include(x => x.ProveedorId);
+           var MedicamentoProveedor= await  _context.MedicamentosProveedores.Where(x => x.MedicamentoId == MedicamentoBuscado.Id).ToListAsync();
 
 
-           foreach(var e in MedicamentoProveedor)
-           {
-             List<string> proveedor = await  _context.Proveedores.Where(x => x.Id == e.ProveedorId).Select(x => x.NombreProveedor).ToListAsync();
-             Proveedores.AddRange(proveedor);
-           }
+            foreach(var e in MedicamentoProveedor)
+            {
 
-           return Proveedores;
+                Proveedor  p = await   _context.Proveedores.FirstOrDefaultAsync(x => x.Id == e.ProveedorId);
+                Proveedores.Add(p.NombreProveedor);
+           
+            }
+        
+
+           return Proveedores; 
+
+          
 
            
      }

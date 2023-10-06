@@ -6,4 +6,6 @@ namespace Dominio.Interfaces;
     {
         Task<dynamic>  TraerMascotasPorEspecieConsulta1();
         Task<dynamic> ListarMascotasAtendidasPorVeterinario_Consulta3(string NombreVeterinario);
+         Task<dynamic> ListarMascotas_PropietariosConGoldenRetriever_Consulta5();
+        Task<dynamic> ListarNumeroDeMascotasPorRaza();
     }

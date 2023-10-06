@@ -1,12 +1,12 @@
 
 
+using System.Security.Cryptography.X509Certificates;
 using Dominio.Entities;
 using Dominio.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Persistencia.Data;
 
-namespace Aplicacion.Repository
-{
+namespace Aplicacion.Repository;
     public class MascotaRepository:GenericRepository<Mascota>,IMascota
     {
       
@@ -27,7 +27,7 @@ namespace Aplicacion.Repository
 
         var totalRegistros = await query.CountAsync();
         var registros = await query
-                                 .Include(u => u.Propietarios) 
+                                /*  .Include(u => u.Propietarios)  */
                                 .Skip((pageIndex-1)*pageSize)
                                 .Take(pageSize)
                                 .ToListAsync();
@@ -69,6 +69,34 @@ namespace Aplicacion.Repository
                                 });
     
     }
+
+
+
+    public async  Task<dynamic> ListarMascotas_PropietariosConGoldenRetriever_Consulta5()
+    {
+
+           return await  _context.Mascotas.Where(x => x.RazaId ==1).Include(x => x.Propietarios)
+                                .Select(e => new 
+                                {
+                                    NombreMascota = e.NombreMascota,
+                                    Propietario = e.Propietarios.NombrePropietario
+                                }).ToListAsync();
+
+                        
+    }
+
+
+
+    public async Task<dynamic> ListarNumeroDeMascotasPorRaza()
+    {
+        return await _context.Mascotas
+                     .GroupBy(x=>x.Razas.RazaNombre)
+                     .ToDictionaryAsync
+                     (
+                        group => group.Key,
+                        group => group.Count( )
+                     );
+                  
 
     }
 }

@@ -66,3 +66,66 @@
 
 
     Es la consulta  => http://localhost:5258/Mascota/ListarMascotasAtendidasPorVeterinario_Consulta3?NombreVeterinario=Jorge
+
+
+4.   public async Task<List<String>>  ListarProveedoresPorMedicamentoDeterminado_Consulta4(string NombreMedicamento)
+     {       
+           List<string> Proveedores = new List<string>();
+           
+            var MedicamentoBuscado =await  _context.Medicamentos.FirstOrDefaultAsync( x => x.NombreMedicamento.ToLower() == NombreMedicamento.ToLower());
+
+
+           var MedicamentoProveedor= await  _context.MedicamentosProveedores.Where(x => x.MedicamentoId == MedicamentoBuscado.Id).ToListAsync();
+
+
+            foreach(var e in MedicamentoProveedor)
+            {
+
+                Proveedor  p = await   _context.Proveedores.FirstOrDefaultAsync(x => x.Id == e.ProveedorId);
+                Proveedores.Add(p.NombreProveedor);
+           
+            }
+        
+
+           return Proveedores; 
+
+          
+
+           
+     }
+
+
+    Es la consulta => http://localhost:5258/Proveedor/ListarProveedoresPorMedicamentoDeterminado_Consulta4?NombreMedicamento=Anti%20Fungico
+
+5. public async  Task<dynamic> ListarMascotas_PropietariosConGoldenRetriever_Consulta5()
+    {
+
+           return await  _context.Mascotas.Where(x => x.RazaId ==1).Include(x => x.Propietarios)
+                                .Select(e => new 
+                                {
+                                    NombreMascota = e.NombreMascota,
+                                    Propietario = e.Propietarios.NombrePropietario
+                                }).ToListAsync();
+
+                        
+    }
+
+    
+    Es la consulta => http://localhost:5258/Mascota/ListarMascotas_PropietariosConGoldenRetriever_Consulta5
+
+
+6. 
+    public async Task<dynamic> ListarNumeroDeMascotasPorRaza()
+    {
+        return await _context.Mascotas
+                     .GroupBy(x=>x.Razas.RazaNombre)
+                     .ToDictionaryAsync
+                     (
+                        group => group.Key,
+                        group => group.Count( )
+                     );
+                  
+
+    }
+
+    Es la consulta => http://localhost:5258/Mascota/ListarNumeroDeMascotasPorRaza_Consulta6

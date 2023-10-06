@@ -74,7 +74,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("{HamburgesaId},{IngredienteId}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
@@ -106,12 +106,12 @@ namespace API.Controllers
         }
         
 
-        [HttpGet("GetAllHamburguesaPaginacion")]
+        [HttpGet("Paginacion")]
         [MapToApiVersion("1.1")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public async Task<ActionResult<Pager<MedicamentoProveedorDto>>> GetHamburguesaPaginacion([FromQuery] Params hamb_ingParams)
+        public async Task<ActionResult<Pager<MedicamentoProveedorDto>>> MedicamentoProveedorPaginacion([FromQuery] Params hamb_ingParams)
         {
             var Hamburguesa = await _unitOfWork.MedicamentosProveedores.GetAllAsync(hamb_ingParams.PageIndex,hamb_ingParams.PageSize);
             var listMedicamentoProveedoresDto=_mapper.Map<List<MedicamentoProveedorDto>>(Hamburguesa.registros);
@@ -145,7 +145,7 @@ namespace API.Controllers
         }
 
 
-        [HttpDelete("{HamburguesaId},{IngredienteId}")]  
+        [HttpDelete]  
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

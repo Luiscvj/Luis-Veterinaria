@@ -97,7 +97,7 @@ namespace API.Controllers;
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
-        public async Task<ActionResult<List<string>>> ListarProveedoresPorMedicamentoDeterminado_Consulta4(string NombreMedicamento)
+        public async Task<ActionResult<List<String>>> ListarProveedoresPorMedicamentoDeterminado_Consulta4(string NombreMedicamento)
         {
             return await  _unitOfWork.Proveedores.ListarProveedoresPorMedicamentoDeterminado_Consulta4(NombreMedicamento);
         }

@@ -43,11 +43,11 @@ namespace Persistencia.Seed;
             var mascota2 = new Mascota {Id =2,NombreMascota ="Zeus" ,FechaNacimiento = new DateTime(2005,2,1),RazaId = RazaGoldenRetriever.Id,PropietarioId = propietario2.Id};
             var mascota3 = new Mascota {Id =3,NombreMascota ="Cookie" ,FechaNacimiento = new DateTime(2017,2,1),RazaId = RazaSavannah.Id,PropietarioId = propietario2.Id};
 
-
+            var MedicamentoProveedor = new MedicamentoProveedor {ProveedorId= Proveedor1.Id, MedicamentoId= MedicamentoAntifungico.Id};
             var cita1 = new Cita {Id = 1,FechaCita = new DateTime(2023,2,4),Motivo ="Dolor estomacal",MascotaId = mascota1.Id,VeterinarioId= veterinarioJorge.Id};
             var cita2 = new Cita {Id = 2,FechaCita = new DateTime(2023,2,9),Motivo ="Pulgas",MascotaId = mascota2.Id,VeterinarioId= veterinarioLuis.Id};
 
-
+            
 
             modelBuilder.Entity<Especie>().HasData(EspecieCanino, EspecieFelino);
             modelBuilder.Entity<Raza>().HasData(RazaGoldenRetriever, RazaPitbull, RazaSavannah);
@@ -60,6 +60,7 @@ namespace Persistencia.Seed;
             modelBuilder.Entity<Propietario>().HasData(propietario1,propietario2);
             modelBuilder.Entity<Mascota>().HasData(mascota1,mascota2,mascota3);
             modelBuilder.Entity<Cita>().HasData(cita1,cita2);
+            modelBuilder.Entity<MedicamentoProveedor>().HasData(MedicamentoProveedor);
         }
     }
 

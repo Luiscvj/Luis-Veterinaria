@@ -107,6 +107,35 @@ namespace API.Controllers;
             return Ok(Mascotas);
         }
 
+
+
+        [HttpGet("ListarMascotas_PropietariosConGoldenRetriever_Consulta5")]
+       // [Authorize(Roles="")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<IEnumerable<dynamic>>>  ListarMascotas_PropietariosConGoldenRetriever_Consulta5()
+        {
+            var Mascotas = await   _unitOfWork.Mascotas.ListarMascotas_PropietariosConGoldenRetriever_Consulta5();
+            if(Mascotas == null)
+                return BadRequest();
+            return Ok(Mascotas);
+        }
+
+
+        [HttpGet("ListarNumeroDeMascotasPorRaza_Consulta6")]
+       // [Authorize(Roles="")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<IEnumerable<dynamic>>>  ListarNumeroDeMascotasPorRaza_Consulta6()
+        {
+            var Mascotas = await   _unitOfWork.Mascotas.ListarNumeroDeMascotasPorRaza();
+            if(Mascotas == null)
+                return BadRequest();
+            return Ok(Mascotas);
+        }
+
         [HttpGet("ListarMascotasAtendidasPorVeterinario_Consulta3")]
        // [Authorize(Roles="")]
         [ProducesResponseType(StatusCodes.Status200OK)]

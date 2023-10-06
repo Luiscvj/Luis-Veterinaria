@@ -27,7 +27,7 @@ namespace Aplicacion.Repository
 
         var totalRegistros = await query.CountAsync();
         var registros = await query
-                                .Include(u => u.Medicamentos) 
+                               /*  .Include(u => u.Medicamentos)  */
                                 .Skip((pageIndex-1)*pageSize)
                                 .Take(pageSize)
                                 .ToListAsync();
