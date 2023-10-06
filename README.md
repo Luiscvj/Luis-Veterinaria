@@ -14,7 +14,7 @@ NOTA: realice Data Seeding , por favor ejecutar la migracion para ver
 
 
 
-///////////////////CONSULTAS//////////////////////////////
+///////////////////CONSULTAS B//////////////////////////////
 
 1.     public async Task<dynamic>  TraerMascotasPorEspecieConsulta1()
      {
