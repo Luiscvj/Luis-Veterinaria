@@ -1,5 +1,5 @@
 # skeleton-app-webapi
-
+NOTA: realice Data Seeding , por favor ejecutar la migracion para ver
 
 #Cambios
 
