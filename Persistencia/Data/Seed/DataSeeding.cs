@@ -47,6 +47,9 @@ namespace Persistencia.Seed;
             var cita1 = new Cita {Id = 1,FechaCita = new DateTime(2023,2,4),Motivo ="Dolor estomacal",MascotaId = mascota1.Id,VeterinarioId= veterinarioJorge.Id};
             var cita2 = new Cita {Id = 2,FechaCita = new DateTime(2023,2,9),Motivo ="Pulgas",MascotaId = mascota2.Id,VeterinarioId= veterinarioLuis.Id};
 
+            var rol1 = new Rol {Id =1 ,Nombre="Administrador"};
+            var rol2 = new Rol {Id =2 ,Nombre="Gerente"};
+            var rol3 = new Rol {Id =3 ,Nombre="Empleado"};
             
 
             modelBuilder.Entity<Especie>().HasData(EspecieCanino, EspecieFelino);
@@ -61,6 +64,7 @@ namespace Persistencia.Seed;
             modelBuilder.Entity<Mascota>().HasData(mascota1,mascota2,mascota3);
             modelBuilder.Entity<Cita>().HasData(cita1,cita2);
             modelBuilder.Entity<MedicamentoProveedor>().HasData(MedicamentoProveedor);
+            modelBuilder.Entity<Rol>().HasData(rol1,rol2,rol3);
         }
     }
 

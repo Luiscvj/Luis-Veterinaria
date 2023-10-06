@@ -1,10 +1,14 @@
 using API.Dtos.MedicamentoDTOS;
+using API.Helpers;
 using AutoMapper;
 using Dominio.Entities;
 using Dominio.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
     public class MedicamentoController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -79,6 +83,22 @@ namespace API.Controllers;
             return  _mapper.Map<MedicamentoDto>(Medicamento);
         }
 
+
+
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<Pager<MedicamentoDto>>> MedicamentoPaginacion([FromQuery] Params hamb_ingParams)
+        {
+            var Medicamentos = await _unitOfWork.Medicamentos.GetAllAsync(hamb_ingParams.PageIndex,hamb_ingParams.PageSize,hamb_ingParams.Search);
+            var ListMedicamentos=_mapper.Map<List<MedicamentoDto>>(Medicamentos.registros);
+
+            return new Pager<MedicamentoDto>(ListMedicamentos,Medicamentos.totalRegistros,  hamb_ingParams.PageIndex, hamb_ingParams.PageSize,hamb_ingParams.Search);
+        }
+
         [HttpGet("GetAll")]
        // [Authorize(Roles="")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -133,7 +153,7 @@ namespace API.Controllers;
 
 
         [HttpDelete]
-        //[Authorize(Roles="")]
+        [Authorize(Roles="Empleado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

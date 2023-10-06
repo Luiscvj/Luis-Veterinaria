@@ -1,10 +1,14 @@
 using API.Dtos.ProveedorDTOS;
+using API.Helpers;
 using AutoMapper;
 using Dominio.Entities;
 using Dominio.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
     public class ProveedorController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -79,6 +83,20 @@ namespace API.Controllers;
             return  _mapper.Map<ProveedorDto>(Proveedor);
         }
 
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<Pager<ProveedorDto>>> ProveedorPaginacion([FromQuery] Params hamb_ingParams)
+        {
+            var Proveedores = await _unitOfWork.Proveedores.GetAllAsync(hamb_ingParams.PageIndex,hamb_ingParams.PageSize,hamb_ingParams.Search);
+            var ListProveedores=_mapper.Map<List<ProveedorDto>>(Proveedores.registros);
+
+            return new Pager<ProveedorDto>(ListProveedores,Proveedores.totalRegistros,  hamb_ingParams.PageIndex, hamb_ingParams.PageSize,hamb_ingParams.Search);
+        }
+
         [HttpGet("GetAll")]
        // [Authorize(Roles="")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -128,7 +146,7 @@ namespace API.Controllers;
 
 
         [HttpDelete]
-        //[Authorize(Roles="")]
+        [Authorize(Roles="Empleado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

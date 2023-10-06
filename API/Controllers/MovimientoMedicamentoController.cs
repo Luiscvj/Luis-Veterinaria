@@ -3,6 +3,7 @@ using API.Helpers;
 using AutoMapper;
 using Dominio.Entities;
 using Dominio.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -146,7 +147,8 @@ namespace API.Controllers
         }
 
 
-        [HttpDelete("{HamburguesaId},{IngredienteId}")]  
+        [HttpDelete]  
+        [Authorize(Roles="Empleado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

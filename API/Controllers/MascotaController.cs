@@ -1,10 +1,14 @@
 using API.Dtos.MascotaDTOS;
+using API.Helpers;
 using AutoMapper;
 using Dominio.Entities;
 using Dominio.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
     public class MascotaController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -77,6 +81,20 @@ namespace API.Controllers;
             if(Mascota == null)
                 return BadRequest();
             return  _mapper.Map<MascotaDto>(Mascota);
+        }
+
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<Pager<MascotaDto>>> MascotaPaginacion([FromQuery] Params hamb_ingParams)
+        {
+            var Mascotas = await _unitOfWork.Mascotas.GetAllAsync(hamb_ingParams.PageIndex,hamb_ingParams.PageSize,hamb_ingParams.Search);
+            var ListMascotas=_mapper.Map<List<MascotaDto>>(Mascotas.registros);
+
+            return new Pager<MascotaDto>(ListMascotas,Mascotas.totalRegistros,  hamb_ingParams.PageIndex, hamb_ingParams.PageSize,hamb_ingParams.Search);
         }
 
         [HttpGet("GetAll")]
@@ -175,7 +193,7 @@ namespace API.Controllers;
 
 
         [HttpDelete]
-        //[Authorize(Roles="")]
+        [Authorize(Roles="Empleado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

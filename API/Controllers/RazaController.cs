@@ -1,10 +1,15 @@
 using API.Dtos.RazaDTOS;
+using API.Helpers;
 using AutoMapper;
 using Dominio.Entities;
 using Dominio.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
     public class RazaController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -79,6 +84,22 @@ namespace API.Controllers;
             return  _mapper.Map<RazaDto>(Raza);
         }
 
+
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<Pager<RazaDto>>> RazaPaginacion([FromQuery] Params hamb_ingParams)
+        {
+            var Razas = await _unitOfWork.Razas.GetAllAsync(hamb_ingParams.PageIndex,hamb_ingParams.PageSize,hamb_ingParams.Search);
+            var ListRazas=_mapper.Map<List<RazaDto>>(Razas.registros);
+
+            return new Pager<RazaDto>(ListRazas,Razas.totalRegistros,  hamb_ingParams.PageIndex, hamb_ingParams.PageSize,hamb_ingParams.Search);
+        }
+
+
         [HttpGet("GetAll")]
        // [Authorize(Roles="")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -118,7 +139,7 @@ namespace API.Controllers;
 
 
         [HttpDelete]
-        //[Authorize(Roles="")]
+        [Authorize(Roles="Empleado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

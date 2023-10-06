@@ -1,10 +1,14 @@
 using API.Dtos.CitaDTOS;
+using API.Helpers;
 using AutoMapper;
 using Dominio.Entities;
 using Dominio.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
     public class CitaController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -41,7 +45,7 @@ namespace API.Controllers;
         }
 
         [HttpPost("AddRange")]
-        //[Authorize(Roles="")]
+       
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
@@ -78,6 +82,25 @@ namespace API.Controllers;
                 return BadRequest();
             return  _mapper.Map<CitaDto>(Cita);
         }
+
+
+    
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<Pager<CitaDto>>> CitaPaginacion([FromQuery] Params hamb_ingParams)
+        {
+            var Citas = await _unitOfWork.Citas.GetAllAsync(hamb_ingParams.PageIndex,hamb_ingParams.PageSize,hamb_ingParams.Search);
+            var ListCitas=_mapper.Map<List<CitaDto>>(Citas.registros);
+
+            return new Pager<CitaDto>(ListCitas,Citas.totalRegistros,  hamb_ingParams.PageIndex, hamb_ingParams.PageSize,hamb_ingParams.Search);
+        }
+    
+
+
+
 
         [HttpGet("GetAll")]
        // [Authorize(Roles="")]
@@ -118,7 +141,7 @@ namespace API.Controllers;
 
 
         [HttpDelete]
-        //[Authorize(Roles="")]
+        [Authorize(Roles="Empleado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

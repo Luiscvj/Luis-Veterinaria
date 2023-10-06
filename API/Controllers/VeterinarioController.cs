@@ -1,10 +1,14 @@
 using API.Dtos.VeterinarioDTOS;
+using API.Helpers;
 using AutoMapper;
 using Dominio.Entities;
 using Dominio.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
     public class VeterinarioController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -79,6 +83,21 @@ namespace API.Controllers;
             return  _mapper.Map<VeterinarioDto>(Veterinario);
         }
 
+
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<Pager<VeterinarioDto>>> VeterinarioPaginacion([FromQuery] Params hamb_ingParams)
+        {
+            var Veterinarios = await _unitOfWork.Veterinarios.GetAllAsync(hamb_ingParams.PageIndex,hamb_ingParams.PageSize,hamb_ingParams.Search);
+            var ListVeterinarios=_mapper.Map<List<VeterinarioDto>>(Veterinarios.registros);
+
+            return new Pager<VeterinarioDto>(ListVeterinarios,Veterinarios.totalRegistros,  hamb_ingParams.PageIndex, hamb_ingParams.PageSize,hamb_ingParams.Search);
+        }
+
         [HttpGet("GetAll")]
        // [Authorize(Roles="")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -118,7 +137,7 @@ namespace API.Controllers;
 
 
         [HttpDelete]
-        //[Authorize(Roles="")]
+        [Authorize(Roles="Empleado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

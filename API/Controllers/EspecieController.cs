@@ -1,10 +1,14 @@
 using API.Dtos.EspecieDTOS;
+using API.Helpers;
 using AutoMapper;
 using Dominio.Entities;
 using Dominio.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+[ApiVersion("1.0")]
+[ApiVersion("1.1")]
     public class EspecieController : BaseApiController
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -41,7 +45,7 @@ namespace API.Controllers;
         }
 
         [HttpPost("AddRange")]
-        //[Authorize(Roles="")]
+       
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
 
@@ -77,6 +81,21 @@ namespace API.Controllers;
             if(Especie == null)
                 return BadRequest();
             return  _mapper.Map<EspecieDto>(Especie);
+        }
+
+
+
+        [HttpGet]
+        [MapToApiVersion("1.1")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<Pager<EspecieDto>>> EspeciePaginacion([FromQuery] Params hamb_ingParams)
+        {
+            var Especies = await _unitOfWork.Especies.GetAllAsync(hamb_ingParams.PageIndex,hamb_ingParams.PageSize,hamb_ingParams.Search);
+            var ListEspecies=_mapper.Map<List<EspecieDto>>(Especies.registros);
+
+            return new Pager<EspecieDto>(ListEspecies,Especies.totalRegistros,  hamb_ingParams.PageIndex, hamb_ingParams.PageSize,hamb_ingParams.Search);
         }
 
         [HttpGet("GetAll")]
@@ -118,7 +137,7 @@ namespace API.Controllers;
 
 
         [HttpDelete]
-        //[Authorize(Roles="")]
+        [Authorize(Roles="Empleado")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         

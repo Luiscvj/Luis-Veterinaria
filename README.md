@@ -129,3 +129,20 @@
     }
 
     Es la consulta => http://localhost:5258/Mascota/ListarNumeroDeMascotasPorRaza_Consulta6
+
+
+
+
+
+///////////////////AUTORIZACION Y JWT/////////////////////////
+
+Realice Autorizacion unicamente para los metodos delete de cada controlador.
+NOTA:Por favor autenticarse con el controladore de usuario para poder ver la funcionalidad de JWT.
+
+
+
+
+/////////////////PAGINACION//////////////////////////////
+
+Realice paginacion de todos los controladores, con Query y version .Todos se pueden ver con version 1.1  y estan en los GET sin nombre por ejemplo:
+http://localhost:5258/Veterinario?v=1.1
